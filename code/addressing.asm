@@ -13,15 +13,16 @@ chrs    db  'A','B','C','D'
 chrs_ptr    dw  offset chrs
 
 ; [belongs to (D)] - for the "static" part, change only these two lines
-static_num1_ptr    dw  0 
-static_num1_ptr_ptr    dw  12;
+static_num1_ptr    dw offset num1 
+static_num1_ptr_ptr    dw  offset static_num1_ptr;
 
 ; [belongs to (E)] - for the "dynamic" part, do NOT use the "offset"
 ; keyword and do NOT change the next two lines
 dynamic_num1_ptr   dw 0;
-dynamic_num1_ptr_ptr dw 12;
+dynamic_num1_ptr_ptr dw 0;
 
 start:
+    
 
  ; PART (A)
 ; Print 23. Use num1, num2, num3 exactly once.
@@ -39,7 +40,8 @@ start:
 ; PART (B)
 ; Print 'C'. Do not use 'chrs' but only 'chrs_ptr'
         PRINTN   "Part (B) - should print C"
-		mov al, dx:[chrs_ptr + 2]
+        mov si, chrs_ptr
+		mov al, [dx + si + 2]
 		mov ah, 0
 
         call	print_al_chr
@@ -69,6 +71,7 @@ start:
         PRINTN
 
 
+
 ; PART (E)
 ; Make the "dynamic" code print 7 without using the "offset" keyword.
 ; Write your code here
@@ -78,6 +81,11 @@ start:
         mov     bx,dynamic_num1_ptr_ptr
         mov     bx,[bx]
         mov     ax,[bx]
+        
+        mov     bx,static_num1_ptr_ptr                                                         
+        mov     bx,[bx]
+        mov     ax,[bx]
+        
         call    print_num
         PRINTN
         mov     ah, 0
